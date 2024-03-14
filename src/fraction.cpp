@@ -25,6 +25,10 @@ Fraction::Fraction()
     : numerator{1},
       denominator{1} {}
 
+Fraction::Fraction(const int &numerator)
+    : numerator{numerator},
+      denominator{1} {}
+
 Fraction::Fraction(const int &numerator, const int &denominator)
     : numerator{numerator},
       denominator{denominator}
@@ -60,6 +64,19 @@ void Fraction::reduce()
     numerator /= s;
     denominator /= s;
 }
+
+Fraction &Fraction::operator=(const Fraction &f)
+{
+    numerator = f.numerator;
+    denominator = f.denominator;
+    return *this;
+}
+
+bool operator==(const Fraction &f0, const Fraction&f1)
+{
+    return f0.numerator == f1.numerator && f0.denominator == f1.denominator;
+}
+
 
 Fraction Fraction::operator+(const Fraction &f) const
 {
@@ -238,7 +255,7 @@ Fraction operator/(const int &s, const Fraction &f)
 std::ostream &operator<<(std::ostream &os, const Fraction &f)
 {
     os << f.numerator;
-    if (f.numerator != 0)
+    if (f.numerator != 0 && f.denominator != 1)
     {
         os << "/" << f.denominator;
     }

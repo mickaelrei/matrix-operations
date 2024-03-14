@@ -14,7 +14,10 @@ public:
     /// @brief Empty constructor
     Fraction();
 
-    /// @brief Constructor
+    /// @brief Constructor with only numerator
+    Fraction(const int &numerator);
+
+    /// @brief Constructor with both numerator and denominator
     Fraction(const int &numerator, const int &denominator);
 
     /// @brief Copy constructor
@@ -39,6 +42,8 @@ public:
     /// @param f Fraction to be copied
     /// @return Fraction copied
     Fraction &operator=(const Fraction &f);
+
+    friend bool operator==(const Fraction &f0, const Fraction&f1);
 
     /// @brief Add fraction
     /// @param f Second fraction
