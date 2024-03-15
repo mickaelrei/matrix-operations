@@ -61,8 +61,21 @@ float Fraction::eval()
 void Fraction::reduce()
 {
     const int s = gcd(numerator, denominator);
+    // If for any reason GCD was zero, exit
+    if (s == 0)
+    {
+        printf("GCD was zero for fraction %d/%d\n", numerator, denominator);
+        return;
+    }
     numerator /= s;
     denominator /= s;
+
+    // Flip signs if needed
+    if (denominator < 0)
+    {
+        numerator *= -1;
+        denominator *= -1;
+    }
 }
 
 Fraction &Fraction::operator=(const Fraction &f)
@@ -72,11 +85,10 @@ Fraction &Fraction::operator=(const Fraction &f)
     return *this;
 }
 
-bool operator==(const Fraction &f0, const Fraction&f1)
+bool Fraction::operator==(const Fraction &f) const
 {
-    return f0.numerator == f1.numerator && f0.denominator == f1.denominator;
+    return numerator == f.numerator && denominator == f.denominator;
 }
-
 
 Fraction Fraction::operator+(const Fraction &f) const
 {
@@ -160,6 +172,11 @@ Fraction &Fraction::operator-=(const int &s)
 Fraction operator-(const int &s, const Fraction &f)
 {
     return f - s;
+}
+
+Fraction Fraction::operator-() const
+{
+    return {-numerator, denominator};
 }
 
 Fraction Fraction::operator*(const Fraction &f) const

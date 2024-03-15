@@ -43,7 +43,10 @@ public:
     /// @return Fraction copied
     Fraction &operator=(const Fraction &f);
 
-    friend bool operator==(const Fraction &f0, const Fraction&f1);
+    /// @brief Equal check operator
+    /// @param f Fraction to check
+    /// @return Whether 2 fractions are the same
+    bool operator==(const Fraction &f) const;
 
     /// @brief Add fraction
     /// @param f Second fraction
@@ -96,6 +99,8 @@ public:
     /// @param f Fraction
     /// @return Result of subtraction
     friend Fraction operator-(const int &s, const Fraction &f);
+
+    Fraction operator-() const;
 
     /// @brief Multiply fraction
     /// @param f Second Fraction
