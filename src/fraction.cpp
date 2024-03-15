@@ -22,12 +22,16 @@ int gcd(int a, int b)
 }
 
 Fraction::Fraction()
-    : numerator{1},
-      denominator{1} {}
+    : Fraction{1, 1} {}
 
 Fraction::Fraction(const int &numerator)
-    : numerator{numerator},
-      denominator{1} {}
+    : Fraction{numerator, 1} {}
+
+Fraction::Fraction(const Fraction &f)
+    : Fraction(f.numerator, f.denominator) {}
+
+Fraction::Fraction(std::array<int, 2> &data)
+    : Fraction(data[0], data[1]) {}
 
 Fraction::Fraction(const int &numerator, const int &denominator)
     : numerator{numerator},
@@ -36,9 +40,6 @@ Fraction::Fraction(const int &numerator, const int &denominator)
     // Denominator can't be zero
     assert((denominator != 0) && "Denominator can't be zero");
 }
-
-Fraction::Fraction(const Fraction &f)
-    : Fraction(f.numerator, f.denominator) {}
 
 Fraction::~Fraction()
 {
@@ -55,6 +56,8 @@ Fraction Fraction::inverse()
 
 float Fraction::eval()
 {
+    assert((denominator != 0) && "Can't eval fraction with denominator zero");
+    
     return (float)numerator / (float)denominator;
 }
 

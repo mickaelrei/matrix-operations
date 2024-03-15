@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ostream>
+#include <array>
 
 class Fraction
 {
@@ -19,6 +20,10 @@ public:
 
     /// @brief Constructor with both numerator and denominator
     Fraction(const int &numerator, const int &denominator);
+
+    /// @brief Constructor from array
+    /// @param data Array containing numerator and denominator
+    Fraction(std::array<int, 2> &data);
 
     /// @brief Copy constructor
     /// @param f Fraction to be copied
