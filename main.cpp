@@ -22,11 +22,13 @@ int main(int argc, char **argv)
     // Show results
     auto inv = A.inverse();
     auto det = A.determinant();
-    std::cout << "det(A) = " << det << "\n\n";
     std::cout << "A:\n"
               << A << "\n\n";
+    std::cout << "det(A) = " << det << "\n\n";
     std::cout << "inv(A):\n"
-              << inv << "\n";
+              << inv << "\n\n";
+    std::cout << "inv(A) * A:\n"
+              << inv * A << "\n";
 
     // Calculate determinant for a big matrix
     const size_t o = 10;
@@ -43,7 +45,11 @@ int main(int argc, char **argv)
     std::cout << "\n==============================";
     std::cout << "\nB:\n"
               << B << "\n\n";
-    std::cout << "det(B) = " << B.determinant() << "\n";
+    std::cout << "det(B) = " << B.determinant() << "\n\n";
+    std::cout << "inv(B):\n"
+              << invB << "\n\n";
+    std::cout << "inv(B) * B:\n"
+              << invB * B << "\n";
 
     return 0;
 }
