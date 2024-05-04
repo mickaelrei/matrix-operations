@@ -274,7 +274,7 @@ Fraction &Fraction::operator/=(const int &s)
 
 Fraction operator/(const int &s, const Fraction &f)
 {
-    return f / s;
+    return Fraction{s} / f;
 }
 
 std::ostream &operator<<(std::ostream &os, const Fraction &f)
