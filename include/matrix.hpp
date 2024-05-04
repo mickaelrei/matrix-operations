@@ -289,7 +289,90 @@ T Matrix<R, C, T>::determinant()
 template <size_t R, size_t C, typename T>
 Matrix<R, C, T> Matrix<R, C, T>::inverse()
 {
-    // IDK
+    static_assert((R == C) && "Inverse of matrix is defined only for square matrices");
+
+    // Create matrix of order (R, 2C)
+    // Left side is current matrix, right side is identity
+    Matrix<R, 2 * C, T> inv{};
+    for (size_t i = 0; i < R; ++i)
+    {
+        for (size_t j = 0; j < 2 * C; ++j)
+        {
+            if (j < C)
+            {
+                inv.data[i][j] = data[i][j];
+            }
+            else
+            {
+                inv.data[i][j] = (i == j - C) ? T{1} : T{0};
+            }
+        }
+    }
+
+    // Perform elementary operations based on current working column
+    // until left side is an identity matrix
+    for (size_t c = 0; c < C; ++c)
+    {
+        // Find first nonzero row
+        size_t row = -1;
+        for (size_t i = c; i < R; ++i)
+        {
+            if (inv.data[i][c] != T{0})
+            {
+                row = i;
+                break;
+            }
+        }
+        if (row == -1UL)
+        {
+            // Entire column is zero, can't reach identity
+            printf("No inverse: reached a state where column %ld is null\n\n", c);
+            return Matrix<R, C, T>();
+        }
+
+        // If first nonzero row is not the same as current working column, swap rows
+        if (row != c)
+        {
+            inv.swapRows(row, c);
+        }
+
+        // Make sure row[c] is 1
+        T elem = inv.data[c][c];
+        if (elem != T{1})
+        {
+            // Multiply by inverse
+            T mult = T{1} / elem;
+            inv.multiplyRow(c, mult);
+        }
+
+        // Make sure all other rows have zeros on this column
+        for (size_t i = 0; i < R; ++i)
+        {
+            // Don't change current row
+            if (i == c)
+                continue;
+
+            // If already zero, skip
+            T elem = inv.data[i][c];
+            if (elem == T{0})
+                continue;
+
+            // Add the opposite
+            inv.addScaledRow(i, c, -elem);
+        }
+    }
+
+    // Create matrix using only right side of result
+    Matrix<R, C, T> res{};
+    for (size_t i = 0; i < R; ++i)
+    {
+        for (size_t j = 0; j < C; ++j)
+        {
+            res.data[i][j] = inv.data[i][j + C];
+        }
+    }
+
+    return res;
 }
 
 template <size_t R, size_t C, typename T>

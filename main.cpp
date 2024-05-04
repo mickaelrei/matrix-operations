@@ -1,20 +1,27 @@
 #include <iostream>
+#include <random>
 
 #include <include/fraction.hpp>
 #include <include/matrix.hpp>
 
 int main(int argc, char **argv)
 {
-    using F = Fraction;
+    srand(time(NULL));
 
-    Matrix<3, 3, F> A{};
-    for (size_t i = 0; i < 3; ++i) {
-        for (size_t j = 0; j < 6; ++j) {
-            A.data[i][j] = 3 * i * i + 4 * j / 3;
+    // Create random 4x4 matrix
+    using F = Fraction;
+    Matrix<4, 4, F> A{};
+    for (size_t i = 0; i < 4; ++i) {
+        for (size_t j = 0; j < 4; ++j) {
+            A.data[i][j] = rand() % 10 - 5;
         }
     }
 
-    A.inverse();
+    // Show results
+    auto inv = A.inverse();
+    std::cout << "det(A) = " << A.determinant() << "\n\n";
+    std::cout << "A:\n" << A << "\n\n";
+    std::cout << "inv(A):\n" << inv << "\n";
 
     return 0;
 }
