@@ -191,18 +191,6 @@ Matrix<R, C, T>::Matrix(const array2d<R, C, T> &data)
     }
 }
 
-// template <size_t R, size_t C, typename T>
-// Matrix<R, C, T>::Matrix(T data[R][C])
-// {
-//     for (size_t i = 0; i < R; ++i)
-//     {
-//         for (size_t j = 0; j < C; ++j)
-//         {
-//             Matrix<R, C, T>::data[i][j] = data[i][j];
-//         }
-//     }
-// }
-
 template <size_t R, size_t C, typename T>
 Matrix<R, C, T>::Matrix(const Matrix<R, C, T> &m)
 {
@@ -254,7 +242,6 @@ template <size_t R, size_t C, typename T>
 T lapLaceDeterminant(const Matrix<R, C, T> &m)
 {
     static_assert((R == C) && "Determinant is defined only for square matrices");
-    std::cout << "laplace for order " << R << "\n";
 
     // No data
     if (R == 0)
@@ -262,19 +249,7 @@ T lapLaceDeterminant(const Matrix<R, C, T> &m)
         return 0;
     }
 
-    // Only one cell, determinant is itself
-    if (R == 1)
-    {
-        return m.data[0][0];
-    }
-
-    // 2x2, calculate by hand
-    if (R == 2)
-    {
-        return m.data[0][0] * m.data[1][1] - m.data[0][1] * m.data[1][0];
-    }
-
-    // From 3x3 up, use Laplace method
+    // Laplace method
     T det = T{0};
     for (size_t i = 0; i < R; ++i)
     {
@@ -302,12 +277,6 @@ template <typename T>
 T lapLaceDeterminant(const Matrix<1, 1, T> &m)
 {
     return m.data[0][0];
-}
-
-template <typename T>
-T lapLaceDeterminant(const Matrix<2, 2, T> &m)
-{
-    return m.data[0][0] * m.data[1][1] - m.data[0][1] * m.data[1][0];
 }
 
 template <size_t R, size_t C, typename T>
