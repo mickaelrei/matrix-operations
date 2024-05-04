@@ -90,7 +90,12 @@ Fraction &Fraction::operator=(const Fraction &f)
 
 bool Fraction::operator==(const Fraction &f) const
 {
-    return numerator == f.numerator && denominator == f.denominator;
+    return numerator * f.denominator == denominator * f.numerator;
+}
+
+bool Fraction::operator!=(const Fraction &f) const
+{
+    return !(*this == f);
 }
 
 Fraction Fraction::operator+(const Fraction &f) const

@@ -53,6 +53,11 @@ public:
     /// @return Whether 2 fractions are the same
     bool operator==(const Fraction &f) const;
 
+    /// @brief Different check operator
+    /// @param f Fraction to check
+    /// @return Whether 2 fractions are different
+    bool operator!=(const Fraction &f) const;
+
     /// @brief Add fraction
     /// @param f Second fraction
     /// @return Result of addition

@@ -140,6 +140,22 @@ public:
     /// @return Identity matrix with given order
     static Matrix<R, C, T> identity();
 
+    /// @brief Elementary operation - swap two rows
+    /// @param r0 first row
+    /// @param r1 second row
+    void swapRows(const size_t &r0, const size_t &r1);
+
+    /// @brief Elementary operation - multiply row by scalar
+    /// @param r row to be multiplied
+    /// @param s scalar value
+    void multiplyRow(const size_t &r, const T &s);
+
+    /// @brief Elementary operation - add on row another row multiplied by scalar
+    /// @param r0 row to be added
+    /// @param r1 row which will be multiplied and added on top of r0
+    /// @param s scalar value
+    void addScaledRow(const size_t &r0, const size_t &r1, const T &s = T{1});
+
 private:
     /// @brief Allocates memory for matrix data
     /// @param r Number of R
@@ -481,4 +497,33 @@ template <size_t R, size_t C, typename T>
 Matrix<R, C, T> &Matrix<R, C, T>::operator/=(const T &s)
 {
     return *this *= T{1} / s;
+}
+
+template <size_t R, size_t C, typename T>
+void Matrix<R, C, T>::swapRows(const size_t &r0, const size_t &r1)
+{
+    for (size_t i = 0; i < C; ++i)
+    {
+        T tmp{data[r0][i]};
+        data[r0][i] = data[r1][i];
+        data[r1][i] = tmp;
+    }
+}
+
+template <size_t R, size_t C, typename T>
+void Matrix<R, C, T>::multiplyRow(const size_t &r, const T &s)
+{
+    for (size_t i = 0; i < C; ++i)
+    {
+        data[r][i] *= s;
+    }
+}
+
+template <size_t R, size_t C, typename T>
+void Matrix<R, C, T>::addScaledRow(const size_t &r0, const size_t &r1, const T &s)
+{
+    for (size_t i = 0; i < C; ++i)
+    {
+        data[r0][i] += s * data[r1][i];
+    }
 }
