@@ -7,23 +7,23 @@ class Fraction
 {
 public:
     /// @brief Fraction numerator
-    int numerator;
+    int64_t numerator;
 
     /// @brief Fraction denominator
-    int denominator;
+    int64_t denominator;
 
     /// @brief Empty constructor
     Fraction();
 
     /// @brief Constructor with only numerator
-    Fraction(const int &numerator);
+    Fraction(const int64_t &numerator);
 
     /// @brief Constructor with both numerator and denominator
-    Fraction(const int &numerator, const int &denominator);
+    Fraction(const int64_t &numerator, const int64_t &denominator);
 
     /// @brief Constructor from array
     /// @param data Array containing numerator and denominator
-    Fraction(std::array<int, 2> &data);
+    Fraction(std::array<int64_t, 2> &data);
 
     /// @brief Copy constructor
     /// @param f Fraction to be copied
@@ -71,18 +71,18 @@ public:
     /// @brief Add fraction and integer
     /// @param s Integer value
     /// @return Result of addition
-    Fraction operator+(const int &s) const;
+    Fraction operator+(const int64_t &s) const;
 
     /// @brief Add fraction and integer and assign
     /// @param s Integer value
     /// @return Result of addition
-    Fraction &operator+=(const int &s);
+    Fraction &operator+=(const int64_t &s);
 
     /// @brief Right-side fraction addition with integer
     /// @param s Integer value
     /// @param f Fraction
     /// @return Result of addition
-    friend Fraction operator+(const int &s, const Fraction &f);
+    friend Fraction operator+(const int64_t &s, const Fraction &f);
 
     /// @brief Subtract fraction
     /// @param f Second Fraction
@@ -97,18 +97,18 @@ public:
     /// @brief Add fraction and integer
     /// @param s Second fraction
     /// @return Result of subtraction
-    Fraction operator-(const int &s) const;
+    Fraction operator-(const int64_t &s) const;
 
     /// @brief Add fraction and integer and assign
     /// @param s Second fraction
     /// @return Result of subtraction
-    Fraction &operator-=(const int &s);
+    Fraction &operator-=(const int64_t &s);
 
     /// @brief Right-side fraction subtraction with integer
     /// @param s Integer value
     /// @param f Fraction
     /// @return Result of subtraction
-    friend Fraction operator-(const int &s, const Fraction &f);
+    friend Fraction operator-(const int64_t &s, const Fraction &f);
 
     Fraction operator-() const;
 
@@ -125,18 +125,18 @@ public:
     /// @brief Multiply fraction by integer
     /// @param s Scale value
     /// @return Result of multiplication
-    Fraction operator*(const int &s) const;
+    Fraction operator*(const int64_t &s) const;
 
     /// @brief Multiply fraction by integer and assign
     /// @param s Scale value
     /// @return Result of multiplication
-    Fraction &operator*=(const int &s);
+    Fraction &operator*=(const int64_t &s);
 
     /// @brief Right-side fraction multiplication by integer
     /// @param s Integer value
     /// @param f Fraction
     /// @return Result of multiplication
-    friend Fraction operator*(const int &s, const Fraction &f);
+    friend Fraction operator*(const int64_t &s, const Fraction &f);
 
     /// @brief Divide fraction
     /// @param f Second Fraction
@@ -151,18 +151,18 @@ public:
     /// @brief Divide fraction by integer
     /// @param s Scale value
     /// @return Result of division
-    Fraction operator/(const int &s) const;
+    Fraction operator/(const int64_t &s) const;
 
     /// @brief Divide fraction by integer and assign
     /// @param s Scale value
     /// @return Result of division
-    Fraction &operator/=(const int &s);
+    Fraction &operator/=(const int64_t &s);
 
     /// @brief Right-side fraction division by integer
     /// @param s Integer value
     /// @param f Fraction
     /// @return Result of division
-    friend Fraction operator/(const int &s, const Fraction &f);
+    friend Fraction operator/(const int64_t &s, const Fraction &f);
 
     /// @brief Print fraction
     /// @param os ostream

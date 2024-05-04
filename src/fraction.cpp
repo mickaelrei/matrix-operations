@@ -8,9 +8,9 @@
 /// @param b Second integer
 /// @return Resulting GCD
 /// Based on: https://en.wikipedia.org/wiki/Euclidean_algorithm
-int gcd(int a, int b)
+int64_t gcd(int64_t a, int64_t b)
 {
-    int t = b;
+    int64_t t = b;
     while (b != 0)
     {
         b = a % b;
@@ -24,16 +24,16 @@ int gcd(int a, int b)
 Fraction::Fraction()
     : Fraction{1, 1} {}
 
-Fraction::Fraction(const int &numerator)
+Fraction::Fraction(const int64_t &numerator)
     : Fraction{numerator, 1} {}
 
 Fraction::Fraction(const Fraction &f)
     : Fraction(f.numerator, f.denominator) {}
 
-Fraction::Fraction(std::array<int, 2> &data)
+Fraction::Fraction(std::array<int64_t, 2> &data)
     : Fraction(data[0], data[1]) {}
 
-Fraction::Fraction(const int &numerator, const int &denominator)
+Fraction::Fraction(const int64_t &numerator, const int64_t &denominator)
     : numerator{numerator},
       denominator{denominator}
 {
@@ -63,11 +63,11 @@ float Fraction::eval()
 
 void Fraction::reduce()
 {
-    const int s = gcd(numerator, denominator);
+    const int64_t s = gcd(numerator, denominator);
     // If for any reason GCD was zero, exit
     if (s == 0)
     {
-        printf("GCD was zero for fraction %d/%d\n", numerator, denominator);
+        printf("GCD was zero for fraction %ld/%ld\n", numerator, denominator);
         return;
     }
     numerator /= s;
@@ -117,14 +117,14 @@ Fraction &Fraction::operator+=(const Fraction &f)
     return *this;
 }
 
-Fraction Fraction::operator+(const int &s) const
+Fraction Fraction::operator+(const int64_t &s) const
 {
     Fraction tmp{*this};
     tmp += s;
     return tmp;
 }
 
-Fraction &Fraction::operator+=(const int &s)
+Fraction &Fraction::operator+=(const int64_t &s)
 {
     numerator += denominator * s;
 
@@ -135,7 +135,7 @@ Fraction &Fraction::operator+=(const int &s)
     return *this;
 }
 
-Fraction operator+(const int &i, const Fraction &f)
+Fraction operator+(const int64_t &i, const Fraction &f)
 {
     return f + i;
 }
@@ -159,14 +159,14 @@ Fraction &Fraction::operator-=(const Fraction &f)
     return *this;
 }
 
-Fraction Fraction::operator-(const int &s) const
+Fraction Fraction::operator-(const int64_t &s) const
 {
     Fraction tmp{*this};
     tmp -= s;
     return tmp;
 }
 
-Fraction &Fraction::operator-=(const int &s)
+Fraction &Fraction::operator-=(const int64_t &s)
 {
     numerator -= denominator * s;
 
@@ -177,7 +177,7 @@ Fraction &Fraction::operator-=(const int &s)
     return *this;
 }
 
-Fraction operator-(const int &s, const Fraction &f)
+Fraction operator-(const int64_t &s, const Fraction &f)
 {
     return f - s;
 }
@@ -206,14 +206,14 @@ Fraction &Fraction::operator*=(const Fraction &f)
     return *this;
 }
 
-Fraction Fraction::operator*(const int &s) const
+Fraction Fraction::operator*(const int64_t &s) const
 {
     Fraction tmp{*this};
     tmp *= s;
     return tmp;
 }
 
-Fraction &Fraction::operator*=(const int &s)
+Fraction &Fraction::operator*=(const int64_t &s)
 {
     numerator *= s;
 
@@ -224,7 +224,7 @@ Fraction &Fraction::operator*=(const int &s)
     return *this;
 }
 
-Fraction operator*(const int &s, const Fraction &f)
+Fraction operator*(const int64_t &s, const Fraction &f)
 {
     return f * s;
 }
@@ -251,14 +251,14 @@ Fraction &Fraction::operator/=(const Fraction &f)
     return *this;
 }
 
-Fraction Fraction::operator/(const int &s) const
+Fraction Fraction::operator/(const int64_t &s) const
 {
     Fraction tmp{*this};
     tmp /= s;
     return tmp;
 }
 
-Fraction &Fraction::operator/=(const int &s)
+Fraction &Fraction::operator/=(const int64_t &s)
 {
     // Can't divide by zero
     assert((s != 0) && "Can't divide by literal zero");
@@ -272,7 +272,7 @@ Fraction &Fraction::operator/=(const int &s)
     return *this;
 }
 
-Fraction operator/(const int &s, const Fraction &f)
+Fraction operator/(const int64_t &s, const Fraction &f)
 {
     return Fraction{s} / f;
 }

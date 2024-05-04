@@ -87,6 +87,11 @@ public:
     /// @return Whether 2 matrices have the same data
     bool operator==(const Matrix<R, C, T> &m) const;
 
+    /// @brief Not equal check operator
+    /// @param m Other matrix
+    /// @return Whether 2 matrices have different data
+    bool operator!=(const Matrix<R, C, T> &m) const;
+
     /// @brief Addition of 2 matrices
     /// @param m Other matrix
     /// @return Result of addition
@@ -280,10 +285,78 @@ T lapLaceDeterminant(const Matrix<1, 1, T> &m)
 }
 
 template <size_t R, size_t C, typename T>
+T rowReductionDeterminant(const Matrix<R, C, T> &m)
+{
+    static_assert((R == C) && "Determinant is defined only for square matrices");
+
+    // Create a copy of this matrix
+    Matrix<R, C, T> tmp{m};
+
+    // Save determinant scale
+    T scale = T{1};
+
+    // Perform elementary operations based on current working column
+    // until reached upper triangle form
+    for (size_t c = 0; c < C; ++c)
+    {
+        // Find first nonzero row
+        size_t row = -1;
+        for (size_t i = c; i < R; ++i)
+        {
+            if (tmp.data[i][c] != T{0})
+            {
+                row = i;
+                break;
+            }
+        }
+        if (row == -1UL)
+        {
+            // Entire column is zero, can't reach identity
+            printf("No inverse: reached a state where column %ld is null\n\n", c);
+            return T{0};
+        }
+
+        // If first nonzero row is not the same as current working column, swap rows
+        if (row != c)
+        {
+            tmp.swapRows(row, c);
+            // Multiply scale by -1 when swapping rows
+            scale *= T{-1};
+        }
+
+        // Make sure row[c] is 1
+        T rowScale = tmp.data[c][c];
+        if (rowScale != T{1})
+        {
+            // Multiply by inverse
+            T mult = T{1} / rowScale;
+            tmp.multiplyRow(c, mult);
+            // Change determinant scale too
+            scale *= rowScale;
+        }
+
+
+        // Make sure all other rows have zeros on this column
+        for (size_t i = c + 1; i < R; ++i)
+        {
+            // If already zero, skip
+            T elem = tmp.data[i][c];
+            if (elem == T{0})
+                continue;
+
+            // Add the opposite
+            tmp.addScaledRow(i, c, -elem);
+        }
+    }
+
+    return scale;
+}
+
+template <size_t R, size_t C, typename T>
 T Matrix<R, C, T>::determinant()
 {
-    // LapLace method seems easier to implement, but could be slower
-    return lapLaceDeterminant(*this);
+    // return lapLaceDeterminant(*this);
+    return rowReductionDeterminant(*this);
 }
 
 template <size_t R, size_t C, typename T>
@@ -424,6 +497,12 @@ bool Matrix<R, C, T>::operator==(const Matrix<R, C, T> &m) const
     }
 
     return true;
+}
+
+template <size_t R, size_t C, typename T>
+bool Matrix<R, C, T>::operator!=(const Matrix<R, C, T> &m) const
+{
+    return !(*this == m);
 }
 
 template <size_t R, size_t C, typename T>
