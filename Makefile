@@ -15,5 +15,5 @@ $(BIN)/fraction.o: $(INCLUDE)/fraction.hpp $(SRC)/fraction.cpp
 	$(CXX) -c -I. $(SRC)/fraction.cpp -o $(BIN)/fraction.o $(FLAGS)
 
 clean:
-	rm $(BIN)/*
-	rmdir $(BIN)
+	@if [ -d $(BIN) ]; then rm $(BIN)/*; fi
+	@if [ -d $(BIN) ]; then rmdir $(BIN); fi
