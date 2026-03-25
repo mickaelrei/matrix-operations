@@ -38,6 +38,11 @@ Matrix<R, C, T> operator*(const Matrix<R, M, T> &m0, const Matrix<M, C, T> &m1);
 template <size_t R, size_t C, typename T>
 T lapLaceDeterminant(const Matrix<R, C, T> &m);
 
+/// @brief Tries to solve for x in the linear system Ax = b using Gauss Jordan
+/// @return The solved x
+template <size_t N, typename T>
+Matrix<N, 1, T> solveGaussJordan(const Matrix<N, N, T> &A, const Matrix<N, 1, T> &b);
+
 template <size_t R, size_t C, typename T>
 class Matrix
 {
@@ -160,16 +165,6 @@ public:
     /// @param r1 row which will be multiplied and added on top of r0
     /// @param s scalar value
     void addScaledRow(const size_t &r0, const size_t &r1, const T &s = T{1});
-
-private:
-    /// @brief Allocates memory for matrix data
-    /// @param r Number of R
-    /// @param c Number of columns
-    /// @param v Optional initial cell value
-    void alloc(const size_t &r, const size_t &c, const T &v = T{0});
-
-    /// @brief Frees memory of matrix data
-    void free();
 };
 
 template <size_t R, size_t C, typename T>
@@ -446,6 +441,64 @@ Matrix<R, C, T> Matrix<R, C, T>::inverse()
     }
 
     return res;
+}
+
+template <size_t N, typename T>
+Matrix<N, 1, T> solveGaussJordan(const Matrix<N, N, T> &A, const Matrix<N, 1, T> &b) {
+    Matrix<N, N + 1, T> aug{};
+
+    for (size_t i = 0; i < N; ++i) {
+        for (size_t j = 0; j < N; ++j) {
+            aug.data[i][j] = A.data[i][j];
+        }
+        aug.data[i][N] = b.data[i][0];
+    }
+
+    // Perform Gauss-Jordan elimination
+    for (size_t c = 0; c < N; ++c) {
+        // Find pivot row
+        size_t pivot = -1;
+        for (size_t i = c; i < N; ++i) {
+            if (aug.data[i][c] != T{0}) {
+                pivot = i;
+                break;
+            }
+        }
+
+        if (pivot == -1UL) {
+            throw std::runtime_error("System has no unique solution");
+        }
+
+        // Swap if needed
+        if (pivot != c) {
+            aug.swapRows(pivot, c);
+        }
+
+        // Normalize pivot row
+        T val = aug.data[c][c];
+        if (val != T{1}) {
+            aug.multiplyRow(c, T{1} / val);
+        }
+
+        // Eliminate all other rows
+        for (size_t i = 0; i < N; ++i) {
+            if (i == c) continue;
+
+            T factor = aug.data[i][c];
+            if (factor != T{0}) {
+                aug.addScaledRow(i, c, -factor);
+            }
+        }
+    }
+
+    // Extract solution
+    Matrix<N, 1, T> x{};
+    for (size_t i = 0; i < N; ++i)
+    {
+        x.data[i][0] = aug.data[i][N];
+    }
+
+    return x;
 }
 
 template <size_t R, size_t C, typename T>
