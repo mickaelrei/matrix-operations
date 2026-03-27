@@ -35,7 +35,8 @@ Matrix<2*N, 1, T> calculateVelocityChanges(Matrix<2*N, 1, T> v, Matrix<N, 1, T> 
     auto uImp = Z.transpose() * v;
 
     auto A = Z.transpose() * invM * Z;
-    auto J = solveGaussJordan(A, -(1.0f + e) * uImp);
+    // auto J = solveGaussJordan(A, -(1.0f + e) * uImp);
+    auto J = solveGaussSeidel(A, -(1.0f + e) * uImp);
 
     return invM * Z * J;
 }
@@ -72,43 +73,53 @@ Matrix<2*N, 1, float> velocityHelper(std::array<glm::vec2, N> p, std::array<glm:
 int main(int argc, char **argv) {
     float d = 5.0f;
 
-    // Caso especifico com colisao simultanea de 3 bolas
+    // Caso especifico com colisao simultanea de 4 bolas
 
     // Massas
     float m0 = 13;
     float m1 = 11;
     float m2 = 7;
+    float m3 = 17;
 
     // Posicoes
-    glm::vec2 p0{0.0f, 0.0f};
-    glm::vec2 p1{d, 0.0f};
-    glm::vec2 p2{d*std::cos(M_PIf / 3), d*std::sin(M_PIf / 3)};
+    glm::vec2 p0{d, d};
+    glm::vec2 p1{-d, d};
+    glm::vec2 p2{-d, -d};
+    glm::vec2 p3{d, -d};
 
     // Angulo das velocidades
-    auto av0 = M_PIf / 4.0f;
-    auto av1 = 3.0f * M_PIf / 4.0f;
-    auto av2 = 3.0f * M_PIf / 2.0f;
+    auto av0 = 5.0f * M_PIf / 4.0f;
+    auto av1 = 7.0f * M_PIf / 4.0f;
+    auto av2 = 1.0f * M_PIf / 4.0f;
+    auto av3 = 3.0f * M_PIf / 4.0f;
 
     // Velocidades
     auto v0 = 5.0f * glm::vec2{std::cos(av0), std::sin(av0)};
     auto v1 = 3.0f * glm::vec2{std::cos(av1), std::sin(av1)};
     auto v2 = 2.0f * glm::vec2{std::cos(av2), std::sin(av2)};
+    auto v3 = 7.0f * glm::vec2{std::cos(av3), std::sin(av3)};
 
     // Arrays de posicao, velocidade e massa
-    std::array<glm::vec2, 3> ps{p0, p1, p2};
-    std::array<glm::vec2, 3> vs{v0, v1, v2};
-    std::array<float, 3> ms{m0, m1, m2};
+    std::array<glm::vec2, 4> ps{p0, p1, p2, p3};
+    std::array<glm::vec2, 4> vs{v0, v1, v2, v3};
+    std::array<float, 4> ms{m0, m1, m2, m3};
 
+    // Chama helper pra transformar arrays em matrizes de input da resolução
     auto dv = velocityHelper(ps, vs, ms);
 
     // Calcula novas velocidades com o resultado do sistema linear
-    auto nv0 = v0 + glm::vec2{dv.data[0][0], dv.data[1][0]};
-    auto nv1 = v1 + glm::vec2{dv.data[2][0], dv.data[3][0]};
-    auto nv2 = v2 + glm::vec2{dv.data[4][0], dv.data[5][0]};
+    std::array<glm::vec2, 4> nvs;
+    for (size_t i = 0; i < 4; i++) {
+        nvs[i] = vs[i] + glm::vec2{dv.data[2*i][0], dv.data[2*i+1][0]};
+    }
 
     // Verifica conservacao de energia do sistema
-    float k = 0.5f * (m0 * glm::length2(v0) + m1 * glm::length2(v1) + m2 * glm::length2(v2));
-    float nk = 0.5f * (m0 * glm::length2(nv0) + m1 * glm::length2(nv1) + m2 * glm::length2(nv2));
+    float k = 0.0f;
+    float nk = 0.0f;
+    for (size_t i = 0; i < 4; i++) {
+        k += 0.5f * ms[i] * glm::length2(vs[i]);
+        nk += 0.5f * ms[i] * glm::length2(nvs[i]);
+    }
 
     printf("k = %.5f | nk = %.5f\n", k, nk);
 }

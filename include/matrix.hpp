@@ -43,6 +43,11 @@ T lapLaceDeterminant(const Matrix<R, C, T> &m);
 template <size_t N, typename T>
 Matrix<N, 1, T> solveGaussJordan(const Matrix<N, N, T> &A, const Matrix<N, 1, T> &b);
 
+/// @brief Tries to solve for x in the linear system Ax = b using Gauss Seidel
+/// @return The solved x
+template <size_t N, typename T>
+Matrix<N, 1, T> solveGaussSeidel(const Matrix<N, N, T> &A, const Matrix<N, 1, T> &b);
+
 template <size_t R, size_t C, typename T>
 class Matrix
 {
@@ -496,6 +501,35 @@ Matrix<N, 1, T> solveGaussJordan(const Matrix<N, N, T> &A, const Matrix<N, 1, T>
     for (size_t i = 0; i < N; ++i)
     {
         x.data[i][0] = aug.data[i][N];
+    }
+
+    return x;
+}
+
+template <size_t N, typename T>
+Matrix<N, 1, T> solveGaussSeidel(const Matrix<N, N, T> &A, const Matrix<N, 1, T> &b) {
+    Matrix<N, 1, T> x;
+
+    size_t c = 0;
+    constexpr size_t MAX_ATTEMPTS = 30;
+    while (c < MAX_ATTEMPTS) {
+        T maxChange{0};
+
+        for (size_t i = 0; i < N; i++) {
+            T v{0};
+            for (size_t j = 0; j < N; j++) {
+                if (i != j) v += A.data[i][j] * x.data[j][0];
+            }
+
+            T newVal = (b.data[i][0] - v) / A.data[i][i];
+            if (i == 0 || maxChange > x.data[i][0] - newVal) maxChange = std::abs(x.data[i][0] - newVal);
+
+            x.data[i][0] = newVal;
+        }
+
+        if (maxChange < 1e-5) break;
+
+        c++;
     }
 
     return x;
